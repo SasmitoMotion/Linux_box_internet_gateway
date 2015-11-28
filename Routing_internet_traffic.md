@@ -13,18 +13,23 @@ note : maybe you must to check file dhcp.conf and to edit the file your configur
       option routers 192.168.1.2;
       option domain-name-servers 208.67.222.222, 208.67.220.220;
       option domain-name "homenetwork";
+      
       subnet 192.168.1.0 netmask 255.255.255.0 {
       range 192.168.1.100 192.168.1.150;
       }
+      
       #Static IP definitions
+     
       host fred-laptop {
       hardware ethernet C4:88:E5:FE:2A:48;
       fixed-address 192.168.1.60;
       }
+     
       host mary-phone {
       hardware ethernet BC:47:60:9C:74:BB;
       fixed-address 192.168.1.61;
       }
+     
       #More IP definitions here...
 
 Each host entry assigns a (different) IP number to each device on the network. For this to work, you'll need the hardware MAC address. On a Windows PC, run the command ipconfig /all in a DOS box, 
@@ -62,6 +67,7 @@ To apply restrictions to the flow of traffic through the Linux box, we can creat
 
       iptables -F FORWARD
       iptables -t nat -A POSTROUTING -o eth0:1 -j MASQUERADE
+      
       # Retain established connections
       /sbin/iptables -A FORWARD -i p255p1 -o p255p1:1 -m state --state RELATED,ESTABLISHED -j ACCEPT
 
@@ -73,3 +79,4 @@ To apply restrictions to the flow of traffic through the Linux box, we can creat
       # Accept everything else
       iptables -A FORWARD -i eth0:1 -o eth0 -j ACCEPT
 
+-j DROP does what it sounds like — affected packets are simply ignored. For the end user, the result is the same as unplugging the network cable, or switching off the wifi radio.
